@@ -7,13 +7,14 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 final localDb = sl<LocalDataBase>();
 final GoRouter router = GoRouter(
   navigatorKey: rootNavigatorKey,
-  initialLocation: Routes.description,
+  initialLocation: Routes.home,
   debugLogDiagnostics: true,
   routes: [
     GoRoute(
       path: Routes.home,
       name: Routes.home,
-      builder: (_, __) => HomePage(),
+      builder: (_, __) =>
+          BlocProvider(create: (context) => sl<HomeBloc>(), child: HomePage()),
     ),
     GoRoute(
       path: Routes.description,

@@ -1,14 +1,23 @@
+import 'dart:async';
+
 import 'package:unicon_soft_tz/app.dart';
 import 'package:unicon_soft_tz/injector_container_path.dart' as di;
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  // WidgetsBinding.instance.handleDrawFrame();
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      await di.init();
+      runApp(MainApp());
+    },
+    (error, stackTrace) {
+      debugPrint('Caught error: $error');
+      debugPrint('Stack trace: $stackTrace');
 
-  await di.init();
-  //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MainApp());
+      /// Crashlytics yoki boshqa crash reporting servicega yuborish
+    },
+  );
 }
 
 /// flutter run -d windows

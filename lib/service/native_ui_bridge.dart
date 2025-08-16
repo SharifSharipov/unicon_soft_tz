@@ -1,0 +1,90 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+
+import '../features/add_task/data/data_source/local_data_base.dart';
+import '../features/add_task/data/models/todo_model.dart';
+
+class UiControlBridge {
+  static const _ch = MethodChannel('ui_control');
+
+  void registerHandlers({
+    required ValueSetter<bool> onSetFlag,
+  }) {
+    _ch.setMethodCallHandler((call) async {
+      try {
+        print('Received method call: ${call.method}');
+
+        switch (call.method) {
+          case 'getUiState':
+            final result = await _getUiStateSafely();
+            print('UI State result: $result');
+            return result;
+
+          case 'setFlag':
+            final arg = call.arguments;
+            final v = (arg is bool) ? arg : (arg is num ? arg != 0 : false);
+            print('Setting flag to: $v');
+            onSetFlag(v);
+            return {'success': true};
+
+          default:
+            print('Unknown method: ${call.method}');
+            throw PlatformException(code: '404', message: 'Not implemented');
+        }
+      } catch (e, stackTrace) {
+        print('Error in method channel: $e');
+        print('Stack trace: $stackTrace');
+        throw PlatformException(
+          code: 'FLUTTER_ERROR',
+          message: e.toString(),
+          details: stackTrace.toString(),
+        );
+      }
+    });
+  }
+
+  Future<Map<String, dynamic>> _getUiStateSafely() async {
+    try {
+      final todos = await LocalDataBase.instance.getTodos();
+      final done = todos.where((t) => t.isCompleted == 1).length;
+      final pending = todos.length - done;
+
+      TodoModel next;
+      try {
+        next = todos.firstWhere(
+              (t) => t.isCompleted == 0,
+          orElse: () => TodoModel(
+            id: 0,
+            title: 'All done!',
+            description: '',
+            startTime: '',
+            isCompleted: 1,
+          ),
+        );
+      } catch (e) {
+        next = TodoModel(
+          id: 0,
+          title: 'No tasks',
+          description: '',
+          startTime: '',
+          isCompleted: 1,
+        );
+      }
+
+      return {
+        'isOn': pending > 0,
+        'title': next.title ?? 'Unknown',
+        'done': done,
+        'pending': pending,
+      };
+    } catch (e) {
+      print('Error getting UI state: $e');
+      return {
+        'isOn': false,
+        'title': 'Error',
+        'done': 0,
+        'pending': 0,
+      };
+    }
+  }
+}

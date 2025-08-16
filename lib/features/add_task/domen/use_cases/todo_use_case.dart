@@ -9,7 +9,7 @@ part 'todo_use_case.freezed.dart';
 part 'todo_use_case.g.dart';
 
 class TodoUseCase extends UseCase<int, TodoModelParams> {
-  final TodoRepositories _repository;
+  final AddTodoRepositories _repository;
   
   TodoUseCase(this._repository);
 

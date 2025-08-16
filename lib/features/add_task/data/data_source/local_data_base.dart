@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:unicon_soft_tz/features/add_task/data/models/todo_model.dart';
 import 'package:unicon_soft_tz/features/add_task/data/models/todo_model_fields.dart';
@@ -10,6 +9,7 @@ class LocalDataBase {
   factory LocalDataBase() => instance;
 
   static Database? _dataBase;
+
   Future<void> warmUp() async {
     await _init();
   }
@@ -22,10 +22,14 @@ class LocalDataBase {
   Future<Database> _initDB(String dbName) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, dbName);
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+    );
   }
 
-  _onCreate(Database database, int version) async {
+  Future<void> _onCreate(Database database, int version) async {
     await database.execute('''
     CREATE TABLE ${TodoModelSQL.tableName} (
       ${TodoModelSQL.id} ${TodoModelSQL.idType},
@@ -33,12 +37,18 @@ class LocalDataBase {
       ${TodoModelSQL.description} ${TodoModelSQL.textType},
       ${TodoModelSQL.startTime} ${TodoModelSQL.textType},
       ${TodoModelSQL.isCompleted} ${TodoModelSQL.intType}
-    ) ''');
+    )
+    ''');
   }
 
   Future<int> insertTodo(TodoModel todoModel) async {
     final db = await instance._init();
-    return await db.insert(TodoModelSQL.tableName, todoModel.toJson());
+    print('Inserting: ${todoModel.toJson()}'); // Debug uchun
+    return await db.insert(
+      TodoModelSQL.tableName,
+      todoModel.toJson(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future<List<TodoModel>> getTodos() async {
@@ -51,7 +61,7 @@ class LocalDataBase {
     final db = await instance._init();
     return await db.delete(
       TodoModelSQL.tableName,
-      where: '_id = ?',
+      where: '${TodoModelSQL.id} = ?',
       whereArgs: [id],
     );
   }
@@ -61,7 +71,7 @@ class LocalDataBase {
     return await db.update(
       TodoModelSQL.tableName,
       todoModel.toJson(),
-      where: '_id = ?',
+      where: '${TodoModelSQL.id} = ?',
       whereArgs: [id],
     );
   }

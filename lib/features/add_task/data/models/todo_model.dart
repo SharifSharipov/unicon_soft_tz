@@ -18,7 +18,6 @@ class TodoModel {
     String? title,
     String? description,
     String? startTime,
-    String? color,
     int? isCompleted,
   }) {
     return TodoModel(
@@ -32,16 +31,17 @@ class TodoModel {
 
   factory TodoModel.fromJson(Map<String, dynamic> json) {
     return TodoModel(
-      id: json['id'] as int? ?? 0,
-      title: json['title'],
-      description: json['description']as String? ?? '',
-      startTime: json['start_time']as String? ?? '',
+      id: json['_id'] as int?,
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      startTime: json['start_time'] as String? ?? '',
       isCompleted: json['is_completed'] as int? ?? 0,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'title': title,
       'description': description,
       'start_time': startTime,
