@@ -14,10 +14,6 @@ class MainApp extends StatelessWidget {
     initialModel: AppOptions(themeMode: ThemeMode.light, locale: const Locale('ru')),
     child: Builder(
       builder: (context) {
-        /// change locale and theme
-        // AppOptions.update(context, context.options.copyWith(
-        //
-        // ));
 
         return MaterialApp.router(
           /// title
@@ -28,23 +24,6 @@ class MainApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: context.options.themeMode,
-
-          // /// lang
-          // locale: context.options.locale,
-          // supportedLocales: const [
-          //   Locale('en'),
-          //   Locale('ru'),
-          //   // Locale('uz'),
-          //   Locale('fr'),
-          // ],
-          // localizationsDelegates: const [
-          //   S.delegate,
-
-          //   ///
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
 
           /// pages
           routerDelegate: router.routerDelegate,

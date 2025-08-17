@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,9 @@ import 'package:unicon_soft_tz/features/home/presentation/widgets/home_body_widg
 import 'package:unicon_soft_tz/features/home/presentation/widgets/task_type_widget.dart';
 import 'package:unicon_soft_tz/router/routes.dart';
 
+import '../../../../service/native_ui_bridge.dart';
+import '../../../add_task/data/data_source/local_data_base.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -17,7 +22,43 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with HomeMixn {
+class _HomePageState extends State<HomePage> with  WidgetsBindingObserver,HomeMixn{
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeBloc>().add(GetTodEvent());
+    WidgetsBinding.instance.addObserver(this);
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+
+
+    if (state == AppLifecycleState.paused) {
+      // BACKGROUND
+      final activeTasks = await checkActiveTasks();
+      if (activeTasks.isNotEmpty) {
+        await UiControlBridge().manageNotificationService(
+          title: "Reminder",
+          message: "You have pending tasks!",
+          intervalSeconds: 30,
+          foregroundTitle: "Tasks Running",
+          foregroundMessage: "Background reminder is active",
+        );
+      }
+    } else if (state == AppLifecycleState.resumed) {
+      await UiControlBridge().stopNotificationService();
+    }
+  }
+
+  Future<List<TodoModel>> checkActiveTasks() async {
+    final todos = await LocalDataBase.instance.getTodos();
+    return todos.where((t) => t.isCompleted == 0).toList();
+  }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   
@@ -96,6 +137,7 @@ class _HomePageState extends State<HomePage> with HomeMixn {
                             ),
                           );
                           context.read<HomeBloc>().add(GetTodEvent());
+
                         },
                         onTap: () {
                           context.pushNamed(
@@ -115,4 +157,10 @@ class _HomePageState extends State<HomePage> with HomeMixn {
       ),
     );
   }
+
+
+
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

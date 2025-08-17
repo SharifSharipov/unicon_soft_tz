@@ -1,25 +1,29 @@
 import 'dart:async';
-
-import 'package:unicon_soft_tz/app.dart';
-import 'package:unicon_soft_tz/injector_container_path.dart' as di;
 import 'package:flutter/material.dart';
+import 'package:unicon_soft_tz/app.dart' as app;
+import 'package:unicon_soft_tz/injector_container_path.dart' as di;
+import 'service/background_service.dart';
 
 Future<void> main() async {
   runZonedGuarded(
-    () async {
+        () async {
       WidgetsFlutterBinding.ensureInitialized();
       await di.init();
-      runApp(MainApp());
-    },
-    (error, stackTrace) {
-      debugPrint('Caught error: $error');
-      debugPrint('Stack trace: $stackTrace');
+      final backgroundService = di.sl<BackgroundService>();
+      await backgroundService.initialize(
+        onSetFlag: (flag) =>
+            debugPrint('Flag set to: $flag at ${DateTime.now()}'),
+      );
 
-      /// Crashlytics yoki boshqa crash reporting servicega yuborish
+      runApp(app.MainApp());
+    },
+        (error, stackTrace) {
+      debugPrint('Caught error: $error at ${DateTime.now()}');
+      debugPrint('Stack trace: $stackTrace at ${DateTime.now()}');
+
     },
   );
 }
-
 /// flutter run -d windows
 /// flutter run --release
 /// flutter build apk --release

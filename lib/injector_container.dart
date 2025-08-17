@@ -7,6 +7,7 @@ Future<void> init() async {
   await db.warmUp();
   sl.registerSingleton<LocalDataBase>(db);
   sl.registerLazySingleton<UiControlBridge>(() => UiControlBridge());
+  sl.registerLazySingleton<BackgroundService>(() => BackgroundService());
   await sl.allReady();
   repository();
   usecase();
@@ -35,7 +36,7 @@ void usecase() {
 
 ///[bloc]
 void stateManagement() {
-  sl.registerFactory<AddTodoBloc>(() => AddTodoBloc(sl()));
-  sl.registerFactory<HomeBloc>(() => HomeBloc(sl(), sl(), sl()));
+  sl.registerFactory<AddTodoBloc>(() => AddTodoBloc(sl(),sl()));
+  sl.registerFactory<HomeBloc>(() => HomeBloc(sl(), sl(), sl(),sl()));
   sl.registerFactory<EditBloc>(() => EditBloc(sl()));
 }

@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
 import '../features/add_task/data/data_source/local_data_base.dart';
 import '../features/add_task/data/models/todo_model.dart';
 
 class UiControlBridge {
-  static const _ch = MethodChannel('ui_control');
+  static const _uiChannel = MethodChannel('ui_control');
+  static const _notificationChannel =
+  MethodChannel('com.example.unicon_soft_tz.notification_service');
 
   void registerHandlers({
     required ValueSetter<bool> onSetFlag,
   }) {
-    _ch.setMethodCallHandler((call) async {
+    _uiChannel.setMethodCallHandler((call) async {
       try {
         debugPrint('Received method call: ${call.method}');
 
@@ -42,7 +43,80 @@ class UiControlBridge {
       }
     });
   }
+  Future<Map<String, dynamic>> manageNotificationService({
+    required String title,
+    required String message,
+    String foregroundTitle = "Background Service",
+    String foregroundMessage = "Service is running...",
+    int intervalSeconds = 30,
+  }) async {
+    try {
+      final permissionResult =
+          await _notificationChannel.invokeMethod('checkNotificationPermission');
+      if (permissionResult is! bool || !permissionResult) {
+        return {
+          'success': false,
+          'message': 'Notification permission denied',
+          'isServiceRunning': false,
+        };
+      }
 
+      final startResult = await _notificationChannel.invokeMethod(
+        'startNotificationService',
+        {
+          'title': title,
+          'message': message,
+          'intervalSeconds': intervalSeconds,
+          'foreground_title': foregroundTitle,
+          'foreground_message': foregroundMessage,
+        },
+      );
+
+      final runningResult =
+          await _notificationChannel.invokeMethod('isNotificationServiceRunning');
+      final isRunning = runningResult is bool ? runningResult : false;
+
+      return {
+        'success': true,
+        'message': startResult?.toString() ?? 'Service started',
+        'isServiceRunning': isRunning,
+      };
+    } on PlatformException catch (e) {
+      return {
+        'success': false,
+        'message': 'Failed: ${e.message}',
+        'isServiceRunning': false,
+      };
+    }
+  }
+
+  Future<String> stopNotificationService() async {
+    try {
+      final result = await _notificationChannel.invokeMethod('stopNotificationService');
+      return result.toString();
+    } catch (e) {
+      debugPrint('Error stopping notification service: $e');
+      return 'Failed to stop notification service';
+    }
+  }
+
+  Future<String> sendSingleNotification({
+    required String title,
+    required String message,
+  }) async {
+    try {
+      final result = await _notificationChannel.invokeMethod('sendSingleNotification', {
+        'title': title,
+        'message': message,
+      });
+      return result.toString();
+    } catch (e) {
+      debugPrint('Error sending single notification: $e');
+      return 'Failed to send notification';
+    }
+  }
+
+  // Get UI state
   Future<Map<String, dynamic>> _getUiStateSafely() async {
     try {
       final todos = await LocalDataBase.instance.getTodos();
