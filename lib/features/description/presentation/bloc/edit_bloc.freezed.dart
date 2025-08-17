@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'home_bloc.dart';
+part of 'edit_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,51 +16,44 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$HomeState {
+mixin _$EditState {
   Failure get failure => throw _privateConstructorUsedError;
   Status get status => throw _privateConstructorUsedError;
-  List<TodoEntity> get todos => throw _privateConstructorUsedError;
-  bool get isDeleting => throw _privateConstructorUsedError;
+  TodoModel? get todoModel => throw _privateConstructorUsedError;
 
-  /// Create a copy of HomeState
+  /// Create a copy of EditState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $HomeStateCopyWith<HomeState> get copyWith =>
+  $EditStateCopyWith<EditState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $HomeStateCopyWith<$Res> {
-  factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
-      _$HomeStateCopyWithImpl<$Res, HomeState>;
+abstract class $EditStateCopyWith<$Res> {
+  factory $EditStateCopyWith(EditState value, $Res Function(EditState) then) =
+      _$EditStateCopyWithImpl<$Res, EditState>;
   @useResult
-  $Res call({
-    Failure failure,
-    Status status,
-    List<TodoEntity> todos,
-    bool isDeleting,
-  });
+  $Res call({Failure failure, Status status, TodoModel? todoModel});
 }
 
 /// @nodoc
-class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
-    implements $HomeStateCopyWith<$Res> {
-  _$HomeStateCopyWithImpl(this._value, this._then);
+class _$EditStateCopyWithImpl<$Res, $Val extends EditState>
+    implements $EditStateCopyWith<$Res> {
+  _$EditStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of HomeState
+  /// Create a copy of EditState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? failure = null,
     Object? status = null,
-    Object? todos = null,
-    Object? isDeleting = null,
+    Object? todoModel = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -72,14 +65,10 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as Status,
-            todos: null == todos
-                ? _value.todos
-                : todos // ignore: cast_nullable_to_non_nullable
-                      as List<TodoEntity>,
-            isDeleting: null == isDeleting
-                ? _value.isDeleting
-                : isDeleting // ignore: cast_nullable_to_non_nullable
-                      as bool,
+            todoModel: freezed == todoModel
+                ? _value.todoModel
+                : todoModel // ignore: cast_nullable_to_non_nullable
+                      as TodoModel?,
           )
           as $Val,
     );
@@ -87,43 +76,37 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
 }
 
 /// @nodoc
-abstract class _$$HomeStateImplCopyWith<$Res>
-    implements $HomeStateCopyWith<$Res> {
-  factory _$$HomeStateImplCopyWith(
-    _$HomeStateImpl value,
-    $Res Function(_$HomeStateImpl) then,
-  ) = __$$HomeStateImplCopyWithImpl<$Res>;
+abstract class _$$EditStateImplCopyWith<$Res>
+    implements $EditStateCopyWith<$Res> {
+  factory _$$EditStateImplCopyWith(
+    _$EditStateImpl value,
+    $Res Function(_$EditStateImpl) then,
+  ) = __$$EditStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    Failure failure,
-    Status status,
-    List<TodoEntity> todos,
-    bool isDeleting,
-  });
+  $Res call({Failure failure, Status status, TodoModel? todoModel});
 }
 
 /// @nodoc
-class __$$HomeStateImplCopyWithImpl<$Res>
-    extends _$HomeStateCopyWithImpl<$Res, _$HomeStateImpl>
-    implements _$$HomeStateImplCopyWith<$Res> {
-  __$$HomeStateImplCopyWithImpl(
-    _$HomeStateImpl _value,
-    $Res Function(_$HomeStateImpl) _then,
+class __$$EditStateImplCopyWithImpl<$Res>
+    extends _$EditStateCopyWithImpl<$Res, _$EditStateImpl>
+    implements _$$EditStateImplCopyWith<$Res> {
+  __$$EditStateImplCopyWithImpl(
+    _$EditStateImpl _value,
+    $Res Function(_$EditStateImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of HomeState
+  /// Create a copy of EditState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? failure = null,
     Object? status = null,
-    Object? todos = null,
-    Object? isDeleting = null,
+    Object? todoModel = freezed,
   }) {
     return _then(
-      _$HomeStateImpl(
+      _$EditStateImpl(
         failure: null == failure
             ? _value.failure
             : failure // ignore: cast_nullable_to_non_nullable
@@ -132,14 +115,10 @@ class __$$HomeStateImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as Status,
-        todos: null == todos
-            ? _value._todos
-            : todos // ignore: cast_nullable_to_non_nullable
-                  as List<TodoEntity>,
-        isDeleting: null == isDeleting
-            ? _value.isDeleting
-            : isDeleting // ignore: cast_nullable_to_non_nullable
-                  as bool,
+        todoModel: freezed == todoModel
+            ? _value.todoModel
+            : todoModel // ignore: cast_nullable_to_non_nullable
+                  as TodoModel?,
       ),
     );
   }
@@ -147,13 +126,12 @@ class __$$HomeStateImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$HomeStateImpl implements _HomeState {
-  const _$HomeStateImpl({
+class _$EditStateImpl implements _EditState {
+  const _$EditStateImpl({
     this.failure = const UnknownFailure(),
     this.status = Status.initial,
-    final List<TodoEntity> todos = const <TodoEntity>[],
-    this.isDeleting = false,
-  }) : _todos = todos;
+    this.todoModel,
+  });
 
   @override
   @JsonKey()
@@ -161,75 +139,55 @@ class _$HomeStateImpl implements _HomeState {
   @override
   @JsonKey()
   final Status status;
-  final List<TodoEntity> _todos;
   @override
-  @JsonKey()
-  List<TodoEntity> get todos {
-    if (_todos is EqualUnmodifiableListView) return _todos;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_todos);
-  }
-
-  @override
-  @JsonKey()
-  final bool isDeleting;
+  final TodoModel? todoModel;
 
   @override
   String toString() {
-    return 'HomeState(failure: $failure, status: $status, todos: $todos, isDeleting: $isDeleting)';
+    return 'EditState(failure: $failure, status: $status, todoModel: $todoModel)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$HomeStateImpl &&
+            other is _$EditStateImpl &&
             (identical(other.failure, failure) || other.failure == failure) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality().equals(other._todos, _todos) &&
-            (identical(other.isDeleting, isDeleting) ||
-                other.isDeleting == isDeleting));
+            (identical(other.todoModel, todoModel) ||
+                other.todoModel == todoModel));
   }
 
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    failure,
-    status,
-    const DeepCollectionEquality().hash(_todos),
-    isDeleting,
-  );
+  int get hashCode => Object.hash(runtimeType, failure, status, todoModel);
 
-  /// Create a copy of HomeState
+  /// Create a copy of EditState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
-      __$$HomeStateImplCopyWithImpl<_$HomeStateImpl>(this, _$identity);
+  _$$EditStateImplCopyWith<_$EditStateImpl> get copyWith =>
+      __$$EditStateImplCopyWithImpl<_$EditStateImpl>(this, _$identity);
 }
 
-abstract class _HomeState implements HomeState {
-  const factory _HomeState({
+abstract class _EditState implements EditState {
+  const factory _EditState({
     final Failure failure,
     final Status status,
-    final List<TodoEntity> todos,
-    final bool isDeleting,
-  }) = _$HomeStateImpl;
+    final TodoModel? todoModel,
+  }) = _$EditStateImpl;
 
   @override
   Failure get failure;
   @override
   Status get status;
   @override
-  List<TodoEntity> get todos;
-  @override
-  bool get isDeleting;
+  TodoModel? get todoModel;
 
-  /// Create a copy of HomeState
+  /// Create a copy of EditState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
+  _$$EditStateImplCopyWith<_$EditStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

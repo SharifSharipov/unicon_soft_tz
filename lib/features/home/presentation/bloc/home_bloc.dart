@@ -1,6 +1,7 @@
 // ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:unicon_soft_tz/constants/constants.dart';
 import 'package:unicon_soft_tz/core/error/failure.dart';
@@ -26,17 +27,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     GetTodEvent event,
     Emitter<HomeState> emit,
   ) async {
-    emit(state.copyWith(status: Status.loading));
+    // Agar todos allaqachon yuklangan bo'lsa, loading ko'rsatmaslik
+    if (state.todos.isEmpty) {
+      emit(state.copyWith(status: Status.loading));
+    }
+    
     final result = await getTodoUsecases(NoParams());
     result.fold(
       (failure) => emit(state.copyWith(
         status: Status.error,
         failure: failure,
       )),
-      (todos) => emit(state.copyWith(
-        status: Status.success,
-        todos: todos,
-      )),
+      (todos) {
+        debugPrint("Todos yuklandi: ${todos.length} ta");
+        emit(state.copyWith(
+          status: Status.success,
+          todos: List<TodoEntity>.from(todos),
+        ));
+      }
     );
   }
 
@@ -44,16 +52,40 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     DeleteTodoEvent event,
     Emitter<HomeState> emit,
   ) async {
-    emit(state.copyWith(status: Status.loading));
-    final result = await deleteTodoUsecases(DeleteTodoParams(id: event.id));
-    result.fold(
-      (failure) => emit(state.copyWith(
-        status: Status.error,
-        failure: failure,
-      )),
-      (_) {
-        add(GetTodEvent());
-      },
-    );
+    // Delete jarayonida loading ko'rsatmaslik, faqat optimistic update
+    try {
+      // 1. Darhol UI dan o'chirish (Optimistic Update)
+      final updatedTodos = state.todos.where((todo) => todo.id != event.id).toList();
+      emit(state.copyWith(
+        status: Status.success,
+        todos: updatedTodos,
+      ));
+
+      // 2. Server da o'chirish
+      final result = await deleteTodoUsecases(DeleteTodoParams(id: event.id));
+      
+      result.fold(
+        (failure) {
+          // Agar xato bo'lsa, eski holatni qaytarish
+          debugPrint("Delete xatosi: $failure");
+          emit(state.copyWith(
+            status: Status.error,
+            failure: failure,
+            todos: state.todos, // Eski todos ni qaytarish
+          ));
+          
+          // Yoki server dan qayta yuklash
+          add(GetTodEvent());
+        },
+        (_) {
+          debugPrint("Todo muvaffaqiyatli o'chirildi: ${event.id}");
+          // Allaqachon UI yangilangan, qo'shimcha ish kerak emas
+        },
+      );
+    } catch (e) {
+      debugPrint("Delete jarayonida xato: $e");
+      // Xato holatida server dan qayta yuklash
+      add(GetTodEvent());
+    }
   }
 }

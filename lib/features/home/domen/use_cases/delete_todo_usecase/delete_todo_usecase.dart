@@ -8,7 +8,7 @@ import 'package:unicon_soft_tz/features/home/domen/repositories/todo_repositorie
 part 'delete_todo_usecase.freezed.dart';
 
 class DeleteTodoUsecase extends UseCase<void, DeleteTodoParams> {
-  final TodoRepository todoRepository;
+  final TodoRepositories todoRepository;
 
   DeleteTodoUsecase(this.todoRepository);
   @override

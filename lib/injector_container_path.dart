@@ -4,6 +4,10 @@ import 'package:unicon_soft_tz/features/add_task/data/repositories/todo_reposito
 import 'package:unicon_soft_tz/features/add_task/domen/repositories/todo_repositories.dart';
 import 'package:unicon_soft_tz/features/add_task/domen/use_cases/todo_use_case.dart';
 import 'package:unicon_soft_tz/features/add_task/presentation/bloc/add_todo_bloc.dart';
+import 'package:unicon_soft_tz/features/description/data/repositories/description_repositories_impl.dart';
+import 'package:unicon_soft_tz/features/description/domen/repositories/description_repositories.dart';
+import 'package:unicon_soft_tz/features/description/domen/use_cases/edit_todo_usecase.dart';
+import 'package:unicon_soft_tz/features/description/presentation/bloc/edit_bloc.dart';
 import 'package:unicon_soft_tz/features/home/data/repositories/todo_repositories_impl.dart';
 import 'package:unicon_soft_tz/features/home/domen/repositories/todo_repositories.dart';
 import 'package:unicon_soft_tz/features/home/domen/use_cases/delete_todo_usecase/delete_todo_usecase.dart';

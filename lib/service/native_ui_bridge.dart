@@ -12,28 +12,28 @@ class UiControlBridge {
   }) {
     _ch.setMethodCallHandler((call) async {
       try {
-        print('Received method call: ${call.method}');
+        debugPrint('Received method call: ${call.method}');
 
         switch (call.method) {
           case 'getUiState':
             final result = await _getUiStateSafely();
-            print('UI State result: $result');
+            debugPrint('UI State result: $result');
             return result;
 
           case 'setFlag':
             final arg = call.arguments;
             final v = (arg is bool) ? arg : (arg is num ? arg != 0 : false);
-            print('Setting flag to: $v');
+            debugPrint('Setting flag to: $v');
             onSetFlag(v);
             return {'success': true};
 
           default:
-            print('Unknown method: ${call.method}');
+            debugPrint('Unknown method: ${call.method}');
             throw PlatformException(code: '404', message: 'Not implemented');
         }
       } catch (e, stackTrace) {
-        print('Error in method channel: $e');
-        print('Stack trace: $stackTrace');
+        debugPrint('Error in method channel: $e');
+        debugPrint('Stack trace: $stackTrace');
         throw PlatformException(
           code: 'FLUTTER_ERROR',
           message: e.toString(),
@@ -73,12 +73,12 @@ class UiControlBridge {
 
       return {
         'isOn': pending > 0,
-        'title': next.title ?? 'Unknown',
+        'title': next.title,
         'done': done,
         'pending': pending,
       };
     } catch (e) {
-      print('Error getting UI state: $e');
+      debugPrint('Error getting UI state: $e');
       return {
         'isOn': false,
         'title': 'Error',

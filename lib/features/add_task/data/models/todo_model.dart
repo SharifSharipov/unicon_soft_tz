@@ -1,3 +1,5 @@
+import 'package:unicon_soft_tz/features/home/domen/entity/todo_entity.dart';
+
 class TodoModel {
   final int? id;
   final String title;
@@ -31,7 +33,7 @@ class TodoModel {
 
   factory TodoModel.fromJson(Map<String, dynamic> json) {
     return TodoModel(
-      id: json['_id'] as int?,
+      id: json['id'] as int?,
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       startTime: json['start_time'] as String? ?? '',
@@ -41,11 +43,34 @@ class TodoModel {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      'id': id,
       'title': title,
       'description': description,
       'start_time': startTime,
       'is_completed': isCompleted,
     };
+  }
+}
+extension TodoModelX on TodoModel {
+  TodoEntity toEntity() {
+    return TodoEntity(
+      id: id ?? 0,
+      title: title,
+      description: description,
+      startTime: startTime,
+      isCompleted: isCompleted == 1, 
+    );
+  }
+}
+
+extension TodoEntityX on TodoEntity {
+  TodoModel toModel() {
+    return TodoModel(
+      id: id,
+      title: title,
+      description: description,
+      startTime: startTime,
+      isCompleted: isCompleted ? 1 : 0, 
+    );
   }
 }

@@ -5,7 +5,7 @@ class HomeState with _$HomeState {
    const factory HomeState({
     @Default(UnknownFailure()) Failure failure,
     @Default(Status.initial) Status status,
-    @Default([]) List<TodoEntity> todos,
-    
+    @Default(<TodoEntity>[]) List<TodoEntity> todos,
+    @Default(false) bool isDeleting,
   }) = _HomeState;
 }

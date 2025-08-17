@@ -5,9 +5,9 @@ import 'package:unicon_soft_tz/features/home/domen/entity/todo_entity.dart';
 import 'package:unicon_soft_tz/features/home/domen/repositories/todo_repositories.dart';
 
 
-class TodoRepositoryImpl implements TodoRepository {
+class TodoRepositoriesImpl implements TodoRepositories {
   final LocalDataBase localDb;
-  TodoRepositoryImpl(this.localDb);
+  TodoRepositoriesImpl(this.localDb);
 
   @override
   Future<Either<Failure, List<TodoEntity>>> getTodos() async {

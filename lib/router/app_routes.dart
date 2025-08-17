@@ -19,7 +19,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: Routes.description,
       name: Routes.description,
-      builder: (_, __) => DescriptionPage(),
+      builder: (context, state) {
+        final todo = state.extra as TodoEntity;
+        return DescriptionPage(todo: todo);
+      },
     ),
     GoRoute(
       path: Routes.addTask,
@@ -28,6 +31,17 @@ final GoRouter router = GoRouter(
         create: (context) => sl<AddTodoBloc>(),
         child: AddTaskPage(),
       ),
+    ),
+    GoRoute(
+      path: Routes.editTask,
+      name: Routes.editTask,
+      builder: (context, state) {
+        final todo = state.extra as TodoModel;
+        return BlocProvider(
+          create: (context) => sl<EditBloc>(),
+          child: EditPage(todoModel: todo),
+        );
+      },
     ),
   ],
 );

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:unicon_soft_tz/features/add_task/data/models/todo_model.dart';
@@ -22,11 +23,7 @@ class LocalDataBase {
   Future<Database> _initDB(String dbName) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, dbName);
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
   Future<void> _onCreate(Database database, int version) async {
@@ -43,7 +40,7 @@ class LocalDataBase {
 
   Future<int> insertTodo(TodoModel todoModel) async {
     final db = await instance._init();
-    print('Inserting: ${todoModel.toJson()}'); // Debug uchun
+    log('Inserting: ${todoModel.toJson()}');
     return await db.insert(
       TodoModelSQL.tableName,
       todoModel.toJson(),

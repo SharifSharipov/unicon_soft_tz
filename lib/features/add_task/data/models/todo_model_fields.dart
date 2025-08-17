@@ -4,7 +4,7 @@ sealed class TodoModelSQL {
   static const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
   static const intType = 'INTEGER DEFAULT 0';
   static const textType = 'TEXT NOT NULL';
-  static const String id = '_id';
+  static const String id = 'id';
   static const String title = 'title';
   static const String description = 'description';
   static const String startTime = 'start_time';

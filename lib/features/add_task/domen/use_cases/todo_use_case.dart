@@ -15,7 +15,7 @@ class TodoUseCase extends UseCase<int, TodoModelParams> {
 
   @override
   Future<Either<Failure, int>> call(TodoModelParams params) async {
-    return _repository.add(params.todoModel);
+    return _repository.add(model: params.todoModel);
   }
 }
 

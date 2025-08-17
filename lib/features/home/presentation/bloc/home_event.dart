@@ -13,3 +13,8 @@ class GetTodEvent extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
+
+class RefreshTodosEvent extends HomeEvent {
+  @override
+  List<Object?> get props => [];
+}

@@ -42,6 +42,8 @@ dependencies:
   flutter_svg: ^2.2.0
   # Show toast messages
   fluttertoast: ^8.0.9
+  #intl
+  intl: ^0.20.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
