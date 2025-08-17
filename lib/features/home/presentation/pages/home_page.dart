@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unicon_soft_tz/core/colors/app_colors.dart';
 import 'package:unicon_soft_tz/core/extension/extension.dart';
+import 'package:unicon_soft_tz/features/add_task/data/models/todo_model.dart';
 import 'package:unicon_soft_tz/features/home/presentation/bloc/home_bloc.dart';
 import 'package:unicon_soft_tz/features/home/presentation/pages/home_mixn.dart';
 import 'package:unicon_soft_tz/features/home/presentation/widgets/home_body_widget.dart';
@@ -16,17 +17,16 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with HomeMixn{
-
+class _HomePageState extends State<HomePage> with HomeMixn {
 
   @override
+  
   Widget build(BuildContext context) {
     return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-  
-      },
+      listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
+          
           return RefreshIndicator(
             displacement: 0,
             edgeOffset: 0,
@@ -67,12 +67,12 @@ class _HomePageState extends State<HomePage> with HomeMixn{
                       ),
                       TaskTypeWidget(
                         tasknName: "y=>done:",
-                        taskCount: '0',
+                        taskCount: "${counter(state.todos)}",
                         color: const Color.fromARGB(255, 4, 254, 142),
                       ),
                       TaskTypeWidget(
                         tasknName: "z=>not done:",
-                        taskCount: '0',
+                        taskCount: '${state.todos.length - counter(state.todos)}',
                         color: AppColors.red,
                       ),
                     ],
@@ -82,7 +82,21 @@ class _HomePageState extends State<HomePage> with HomeMixn{
                     child: ListView.builder(
                       itemBuilder: (context, index) => HomeBodyWidget(
                         todo: state.todos[index],
-                        onLongPress: () {},
+                        onLongPress: () {
+                          context.read<HomeBloc>().add(
+                            TodoIsCompletedEvent(
+                              state.todos[index].id,
+                              TodoModel(
+                                id: state.todos[index].id,
+                                title: state.todos[index].title,
+                                description: state.todos[index].description,
+                                startTime: state.todos[index].startTime,
+                                isCompleted: 1,
+                              ),
+                            ),
+                          );
+                          context.read<HomeBloc>().add(GetTodEvent());
+                        },
                         onTap: () {
                           context.pushNamed(
                             Routes.description,

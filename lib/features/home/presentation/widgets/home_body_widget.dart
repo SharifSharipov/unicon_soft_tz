@@ -13,17 +13,22 @@ class HomeBodyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String convertToString(bool value) {
+    String convertToString(int value) {
       switch (value) {
-        case false:
+        case 0:
           return "Task not completed";
-        case true:
+        case 1:
           return "Task completed";
+        default:
+          return "Task not completed";  
       }
     }
 
     return GestureDetector(
-      onLongPress: onLongPress,
+      onLongPress: (){
+        FocusScope.of(context).unfocus();
+        onLongPress();
+      },
       onTap:onTap ,
       child: SizedBox(
         width: double.infinity,

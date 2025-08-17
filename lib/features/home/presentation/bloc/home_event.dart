@@ -13,7 +13,13 @@ class GetTodEvent extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
-
+class TodoIsCompletedEvent extends HomeEvent {
+  final int id;
+  final TodoModel todoModel;
+  TodoIsCompletedEvent(this.id, this.todoModel);
+  @override
+  List<Object?> get props => [id, todoModel];
+}
 class RefreshTodosEvent extends HomeEvent {
   @override
   List<Object?> get props => [];

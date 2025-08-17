@@ -7,5 +7,6 @@ class HomeState with _$HomeState {
     @Default(Status.initial) Status status,
     @Default(<TodoEntity>[]) List<TodoEntity> todos,
     @Default(false) bool isDeleting,
+    TodoEntity? todo,
   }) = _HomeState;
 }

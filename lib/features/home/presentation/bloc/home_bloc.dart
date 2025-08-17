@@ -6,8 +6,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:unicon_soft_tz/constants/constants.dart';
 import 'package:unicon_soft_tz/core/error/failure.dart';
 import 'package:unicon_soft_tz/core/usecase/usecase.dart';
+import 'package:unicon_soft_tz/features/add_task/data/models/todo_model.dart';
 import 'package:unicon_soft_tz/features/home/domen/entity/todo_entity.dart';
 import 'package:unicon_soft_tz/features/home/domen/use_cases/delete_todo_usecase/delete_todo_usecase.dart';
+import 'package:unicon_soft_tz/features/home/domen/use_cases/edit_complated_usce_case/edit_complated_usce_case.dart';
 import 'package:unicon_soft_tz/features/home/domen/use_cases/get_todo_usecases.dart';
 
 part 'home_event.dart';
@@ -17,75 +19,84 @@ part 'home_bloc.freezed.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetTodoUsecases getTodoUsecases;
   final DeleteTodoUsecase deleteTodoUsecases;
+  final EditCompletedUseCase editCompletedUseCase;
 
-  HomeBloc(this.getTodoUsecases, this.deleteTodoUsecases) : super(const HomeState()) {
+  HomeBloc(this.getTodoUsecases, this.deleteTodoUsecases, this.editCompletedUseCase)
+      : super(const HomeState()) {
     on<GetTodEvent>(_onLoadTodos);
     on<DeleteTodoEvent>(_onDeleteTodo);
+    on<TodoIsCompletedEvent>(_editCompleted);
+    on<RefreshTodosEvent>(_onRefreshTodos);
   }
 
-  Future<void> _onLoadTodos(
-    GetTodEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    // Agar todos allaqachon yuklangan bo'lsa, loading ko'rsatmaslik
-    if (state.todos.isEmpty) {
-      emit(state.copyWith(status: Status.loading));
-    }
-    
+  Future<void> _onLoadTodos(GetTodEvent event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(status: Status.loading));
     final result = await getTodoUsecases(NoParams());
     result.fold(
-      (failure) => emit(state.copyWith(
-        status: Status.error,
-        failure: failure,
-      )),
-      (todos) {
-        debugPrint("Todos yuklandi: ${todos.length} ta");
-        emit(state.copyWith(
+      (failure) => emit(state.copyWith(status: Status.error, failure: failure)),
+      (todos)=> emit(state.copyWith(
           status: Status.success,
           todos: List<TodoEntity>.from(todos),
-        ));
-      }
+        )),
     );
   }
 
-  Future<void> _onDeleteTodo(
-    DeleteTodoEvent event,
-    Emitter<HomeState> emit,
-  ) async {
-    // Delete jarayonida loading ko'rsatmaslik, faqat optimistic update
+  Future<void> _onDeleteTodo(DeleteTodoEvent event, Emitter<HomeState> emit) async {
     try {
-      // 1. Darhol UI dan o'chirish (Optimistic Update)
       final updatedTodos = state.todos.where((todo) => todo.id != event.id).toList();
-      emit(state.copyWith(
-        status: Status.success,
-        todos: updatedTodos,
-      ));
-
-      // 2. Server da o'chirish
+      emit(state.copyWith(status: Status.success, todos: updatedTodos));
       final result = await deleteTodoUsecases(DeleteTodoParams(id: event.id));
-      
       result.fold(
         (failure) {
-          // Agar xato bo'lsa, eski holatni qaytarish
-          debugPrint("Delete xatosi: $failure");
+          debugPrint("O'chirish xatosi: $failure");
           emit(state.copyWith(
             status: Status.error,
             failure: failure,
-            todos: state.todos, // Eski todos ni qaytarish
+            todos: state.todos,
           ));
-          
-          // Yoki server dan qayta yuklash
           add(GetTodEvent());
         },
-        (_) {
-          debugPrint("Todo muvaffaqiyatli o'chirildi: ${event.id}");
-          // Allaqachon UI yangilangan, qo'shimcha ish kerak emas
-        },
+        (_) => debugPrint("Todo muvaffaqiyatli o'chirildi: ${event.id}"),
       );
     } catch (e) {
-      debugPrint("Delete jarayonida xato: $e");
-      // Xato holatida server dan qayta yuklash
+      debugPrint("O'chirish jarayonida xato: $e");
+      emit(state.copyWith(status: Status.error, failure: UnknownFailure()));
       add(GetTodEvent());
     }
+  }
+
+  Future<void> _editCompleted(TodoIsCompletedEvent event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(status: Status.loading));
+    final result = await editCompletedUseCase(EditCompletedParams(id: event.id, todoModel: event.todoModel));
+    result.fold(
+      (failure) {
+        debugPrint("Tahrirlash xatosi: $failure");
+        emit(state.copyWith(status: Status.error, failure: failure));
+      },
+      (_) {
+        final updatedTodos = state.todos.map((todo) {
+      
+          return todo;
+        }).toList();
+        emit(state.copyWith(
+          status: Status.success,
+          todos: updatedTodos,
+          todo: null,
+        ));
+        debugPrint("Todo holati o'zgartirildi: ${event.id}");
+      },
+    );
+  }
+
+  Future<void> _onRefreshTodos(RefreshTodosEvent event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(status: Status.loading));
+    final result = await getTodoUsecases(NoParams());
+    result.fold(
+      (failure) => emit(state.copyWith(status: Status.error, failure: failure)),
+      (todos) => emit(state.copyWith(
+        status: Status.success,
+        todos: List<TodoEntity>.from(todos),
+      )),
+    );
   }
 }

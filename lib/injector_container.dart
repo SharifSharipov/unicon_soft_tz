@@ -19,7 +19,9 @@ void repository() {
     () => AddTodoRepositoriesImpl(sl()),
   );
   sl.registerLazySingleton<TodoRepositories>(() => TodoRepositoriesImpl(sl()));
-  sl.registerLazySingleton<DescriptionRepositories>(() => DescriptionRepositoriesImpl(sl()));
+  sl.registerLazySingleton<DescriptionRepositories>(
+    () => DescriptionRepositoriesImpl(sl()),
+  );
 }
 
 ///[usecase]
@@ -28,11 +30,12 @@ void usecase() {
   sl.registerLazySingleton<GetTodoUsecases>(() => GetTodoUsecases(sl()));
   sl.registerLazySingleton<DeleteTodoUsecase>(() => DeleteTodoUsecase(sl()));
   sl.registerLazySingleton<EditTodoUseCase>(() => EditTodoUseCase(sl()));
+  sl.registerLazySingleton<EditCompletedUseCase>(() => EditCompletedUseCase(sl()));
 }
 
 ///[bloc]
 void stateManagement() {
   sl.registerFactory<AddTodoBloc>(() => AddTodoBloc(sl()));
-  sl.registerFactory<HomeBloc>(() => HomeBloc(sl(), sl()));
+  sl.registerFactory<HomeBloc>(() => HomeBloc(sl(), sl(), sl()));
   sl.registerFactory<EditBloc>(() => EditBloc(sl()));
 }

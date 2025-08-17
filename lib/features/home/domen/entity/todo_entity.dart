@@ -5,7 +5,7 @@ class TodoEntity extends Equatable {
   final String title;
   final String description;
   final String startTime;
-  final bool isCompleted;
+  final int isCompleted;
 
   const TodoEntity({
     required this.id,

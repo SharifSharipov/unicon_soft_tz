@@ -11,6 +11,7 @@ import 'package:unicon_soft_tz/features/description/presentation/bloc/edit_bloc.
 import 'package:unicon_soft_tz/features/home/data/repositories/todo_repositories_impl.dart';
 import 'package:unicon_soft_tz/features/home/domen/repositories/todo_repositories.dart';
 import 'package:unicon_soft_tz/features/home/domen/use_cases/delete_todo_usecase/delete_todo_usecase.dart';
+import 'package:unicon_soft_tz/features/home/domen/use_cases/edit_complated_usce_case/edit_complated_usce_case.dart';
 import 'package:unicon_soft_tz/features/home/domen/use_cases/get_todo_usecases.dart';
 import 'package:unicon_soft_tz/features/home/presentation/bloc/home_bloc.dart';
 import 'package:unicon_soft_tz/service/native_ui_bridge.dart';

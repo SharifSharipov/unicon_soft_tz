@@ -5,4 +5,5 @@ import 'package:unicon_soft_tz/features/home/domen/entity/todo_entity.dart';
 abstract class TodoRepositories {
   Future<Either<Failure, List<TodoEntity>>> getTodos();
   Future<Either<Failure, void>> deleteTodo(int id);
+  Future<Either<Failure, int>> editCompleted({required int id, required TodoEntity todoModel});
 }

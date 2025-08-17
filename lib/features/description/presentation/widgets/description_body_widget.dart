@@ -12,12 +12,14 @@ class DescriptionBodyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String convertToString(bool value) {
+    String convertToString(int value) {
       switch (value) {
-        case false:
+        case 1:
           return "Task not completed";
-        case true:
+        case 2:
           return "Task completed";
+        default:
+          return "Task not completed";
       }
     }
 

@@ -50,6 +50,7 @@ class TodoModel {
       'is_completed': isCompleted,
     };
   }
+  
 }
 extension TodoModelX on TodoModel {
   TodoEntity toEntity() {
@@ -58,7 +59,7 @@ extension TodoModelX on TodoModel {
       title: title,
       description: description,
       startTime: startTime,
-      isCompleted: isCompleted == 1, 
+      isCompleted: isCompleted, 
     );
   }
 }
@@ -70,7 +71,7 @@ extension TodoEntityX on TodoEntity {
       title: title,
       description: description,
       startTime: startTime,
-      isCompleted: isCompleted ? 1 : 0, 
+      isCompleted:isCompleted, 
     );
   }
 }

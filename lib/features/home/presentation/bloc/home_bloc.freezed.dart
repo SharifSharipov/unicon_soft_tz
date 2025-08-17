@@ -21,6 +21,7 @@ mixin _$HomeState {
   Status get status => throw _privateConstructorUsedError;
   List<TodoEntity> get todos => throw _privateConstructorUsedError;
   bool get isDeleting => throw _privateConstructorUsedError;
+  TodoEntity? get todo => throw _privateConstructorUsedError;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -39,6 +40,7 @@ abstract class $HomeStateCopyWith<$Res> {
     Status status,
     List<TodoEntity> todos,
     bool isDeleting,
+    TodoEntity? todo,
   });
 }
 
@@ -61,6 +63,7 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
     Object? status = null,
     Object? todos = null,
     Object? isDeleting = null,
+    Object? todo = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -80,6 +83,10 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
                 ? _value.isDeleting
                 : isDeleting // ignore: cast_nullable_to_non_nullable
                       as bool,
+            todo: freezed == todo
+                ? _value.todo
+                : todo // ignore: cast_nullable_to_non_nullable
+                      as TodoEntity?,
           )
           as $Val,
     );
@@ -100,6 +107,7 @@ abstract class _$$HomeStateImplCopyWith<$Res>
     Status status,
     List<TodoEntity> todos,
     bool isDeleting,
+    TodoEntity? todo,
   });
 }
 
@@ -121,6 +129,7 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     Object? status = null,
     Object? todos = null,
     Object? isDeleting = null,
+    Object? todo = freezed,
   }) {
     return _then(
       _$HomeStateImpl(
@@ -140,6 +149,10 @@ class __$$HomeStateImplCopyWithImpl<$Res>
             ? _value.isDeleting
             : isDeleting // ignore: cast_nullable_to_non_nullable
                   as bool,
+        todo: freezed == todo
+            ? _value.todo
+            : todo // ignore: cast_nullable_to_non_nullable
+                  as TodoEntity?,
       ),
     );
   }
@@ -153,6 +166,7 @@ class _$HomeStateImpl implements _HomeState {
     this.status = Status.initial,
     final List<TodoEntity> todos = const <TodoEntity>[],
     this.isDeleting = false,
+    this.todo,
   }) : _todos = todos;
 
   @override
@@ -173,10 +187,12 @@ class _$HomeStateImpl implements _HomeState {
   @override
   @JsonKey()
   final bool isDeleting;
+  @override
+  final TodoEntity? todo;
 
   @override
   String toString() {
-    return 'HomeState(failure: $failure, status: $status, todos: $todos, isDeleting: $isDeleting)';
+    return 'HomeState(failure: $failure, status: $status, todos: $todos, isDeleting: $isDeleting, todo: $todo)';
   }
 
   @override
@@ -188,7 +204,8 @@ class _$HomeStateImpl implements _HomeState {
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(other._todos, _todos) &&
             (identical(other.isDeleting, isDeleting) ||
-                other.isDeleting == isDeleting));
+                other.isDeleting == isDeleting) &&
+            (identical(other.todo, todo) || other.todo == todo));
   }
 
   @override
@@ -198,6 +215,7 @@ class _$HomeStateImpl implements _HomeState {
     status,
     const DeepCollectionEquality().hash(_todos),
     isDeleting,
+    todo,
   );
 
   /// Create a copy of HomeState
@@ -215,6 +233,7 @@ abstract class _HomeState implements HomeState {
     final Status status,
     final List<TodoEntity> todos,
     final bool isDeleting,
+    final TodoEntity? todo,
   }) = _$HomeStateImpl;
 
   @override
@@ -225,6 +244,8 @@ abstract class _HomeState implements HomeState {
   List<TodoEntity> get todos;
   @override
   bool get isDeleting;
+  @override
+  TodoEntity? get todo;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
